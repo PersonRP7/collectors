@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models import UniqueConstraint
 from django.db.models.functions import Lower
+from datetime import date, timedelta
 
 class CollectorData(models.Model):
 
@@ -16,6 +17,21 @@ class CollectorData(models.Model):
         verbose_name = "Collector Data"
         verbose_name_plural = verbose_name
 
+    def __str__(self) -> str:
+        return f"{self.first_name} {self.last_name}"
+
+    def one_year_from_now() -> date:
+        """
+        Returns the date exactly one year from today.
+
+        This function calculates a date that is 365 days from the current date, 
+        which can be used as a default value for date fields in Django models.
+
+        Returns:
+            date: A date object representing one year from today.
+        """
+        return date.today() + timedelta(days=365)
+
     first_name = models.CharField(
         max_length=100
     )
@@ -26,7 +42,9 @@ class CollectorData(models.Model):
 
     registration_date = models.DateField()
 
-    registration_expiration = models.DateField()
+    registration_expiration = models.DateField(
+        default = one_year_from_now
+    )
 
     date_of_birth = models.DateField()
 
@@ -53,6 +71,3 @@ class CollectorData(models.Model):
     )
 
     note = models.TextField(blank = True, null = True)
-
-    def __str__(self):
-        return f"{self.first_name} {self.last_name}"
