@@ -37,7 +37,10 @@ Here are a few steps on how to run this project locally:
     (Note, the file has to be called ```.env```.)
 ### Do not commit the secret key to version control! ###
 
-Run migrations and create a local database. This will automatically create a local sqlite db:
+7. Create dockerized Postgres database:
+    ```docker compose up -d```
+
+Run migrations and create a local database. This will automatically create a local Postgres db:
     
     $ python3 manage.py migrate
 
