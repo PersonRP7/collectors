@@ -5,6 +5,9 @@ import django.core.validators
 import django.db.models.functions.text
 from django.db import migrations, models
 
+import collector.utils
+import collector.utils.date_utils
+
 
 class Migration(migrations.Migration):
     initial = True
@@ -31,7 +34,7 @@ class Migration(migrations.Migration):
                 (
                     "expiration_date",
                     models.DateField(
-                        default=collector.models.CollectorData.one_year_from_now
+                        default=collector.utils.date_utils.date_one_year_from_now
                     ),
                 ),
                 (
