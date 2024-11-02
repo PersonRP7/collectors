@@ -76,6 +76,6 @@ class CollectorData(models.Model):
     whatsapp = models.BooleanField(default=True)
     print_card = models.BooleanField(default=False)
 
-    reminder_count = models.PositiveIntegerField()
+    reminder_count = models.PositiveIntegerField(default=0)
 
     note = models.CharField(max_length=100, blank=True, null=True)
