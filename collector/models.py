@@ -2,29 +2,32 @@ from django.db import models
 from django.db.models import UniqueConstraint
 from django.db.models.functions import Lower
 from datetime import date, timedelta
+from django.core.validators import (
+    RegexValidator,
+    MinLengthValidator,
+    MaxLengthValidator,
+)
+
 
 class CollectorData(models.Model):
 
     class Meta:
         constraints = [
             UniqueConstraint(
-                Lower('first_name'),
-                Lower('last_name').desc(),
-                name='first_last_name_unique',
+                Lower("first_name"),
+                Lower("last_name").desc(),
+                name="first_last_name_unique",
             ),
         ]
 
         verbose_name = "Collector Data"
         verbose_name_plural = verbose_name
 
-    def __str__(self) -> str:
-        return f"{self.first_name} {self.last_name}"
-
     def one_year_from_now() -> date:
         """
         Returns the date exactly one year from today.
 
-        This function calculates a date that is 365 days from the current date, 
+        This function calculates a date that is 365 days from the current date,
         which can be used as a default value for date fields in Django models.
 
         Returns:
@@ -32,42 +35,46 @@ class CollectorData(models.Model):
         """
         return date.today() + timedelta(days=365)
 
-    first_name = models.CharField(
-        max_length=100
-    )
+    def __str__(self):
+        return f"{self.first_name} {self.last_name} - {self.status}"
 
-    last_name = models.CharField(
-        max_length=100
-    )
+    number = models.BigIntegerField(null=True, blank=True)
+
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
 
     registration_date = models.DateField()
+    expiration_date = models.DateField(default=one_year_from_now)
 
-    registration_expiration = models.DateField(
-        default = one_year_from_now
+    STATUS_CHOICES = [
+        ("Active", "Active"),
+        ("Expired", "Expired"),
+        ("Removed", "Removed"),
+    ]
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="Active")
+
+    birthdate = models.DateField()
+    place_of_birth = models.CharField(max_length=100)
+    address = models.CharField(max_length=255)
+    place_of_residence = models.CharField(max_length=100)
+    postal_code = models.PositiveIntegerField()
+
+    # Personal number with validators
+    personal_number = models.CharField(
+        blank=True,
+        null=True,
+        max_length=11,
+        validators=[
+            RegexValidator(r"^\d+$", "Personal number must contain only digits."),
+            MinLengthValidator(11, "Personal number must be exactly 11 digits."),
+            MaxLengthValidator(11, "Personal number must be exactly 11 digits."),
+        ],
     )
 
-    date_of_birth = models.DateField()
+    email = models.EmailField(unique=True)
+    phone_number = models.CharField(max_length=15, null=True, blank=True)
 
-    place_of_birth = models.CharField(
-        max_length=150
-    )
+    add_to_whatsapp = models.BooleanField(default=True)
+    print_card = models.BooleanField(default=False)
 
-    street = models.CharField(
-        max_length=150
-    )
-
-    personal_id_number = models.PositiveBigIntegerField()
-
-    email = models.EmailField(
-        max_length = 254
-    )
-
-    phone_number = models.CharField(
-        max_length = 20
-    )
-
-    add_to_whatsapp = models.BooleanField(
-        default = True
-    )
-
-    note = models.TextField(blank = True, null = True)
+    note = models.TextField(blank=True, null=True)
