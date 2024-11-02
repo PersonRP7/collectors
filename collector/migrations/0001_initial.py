@@ -7,39 +7,91 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='CollectorData',
+            name="CollectorData",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('number', models.BigIntegerField(blank=True, null=True)),
-                ('first_name', models.CharField(max_length=100)),
-                ('last_name', models.CharField(max_length=100)),
-                ('registration_date', models.DateField()),
-                ('expiration_date', models.DateField(default=collector.models.CollectorData.one_year_from_now)),
-                ('status', models.CharField(choices=[('Active', 'Active'), ('Expired', 'Expired'), ('Removed', 'Removed')], default='Active', max_length=10)),
-                ('birthdate', models.DateField()),
-                ('place_of_birth', models.CharField(max_length=100)),
-                ('address', models.CharField(max_length=255)),
-                ('place_of_residence', models.CharField(max_length=100)),
-                ('postal_code', models.PositiveIntegerField()),
-                ('personal_number', models.CharField(blank=True, max_length=11, null=True, validators=[django.core.validators.RegexValidator('^\\d+$', 'Personal number must contain only digits.'), django.core.validators.MinLengthValidator(11, 'Personal number must be exactly 11 digits.'), django.core.validators.MaxLengthValidator(11, 'Personal number must be exactly 11 digits.')])),
-                ('email', models.EmailField(max_length=254, unique=True)),
-                ('phone_number', models.CharField(blank=True, max_length=15, null=True)),
-                ('add_to_whatsapp', models.BooleanField(default=True)),
-                ('print_card', models.BooleanField(default=False)),
-                ('note', models.TextField(blank=True, null=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("number", models.BigIntegerField(blank=True, null=True)),
+                ("first_name", models.CharField(max_length=100)),
+                ("last_name", models.CharField(max_length=100)),
+                ("registration_date", models.DateField()),
+                (
+                    "expiration_date",
+                    models.DateField(
+                        default=collector.models.CollectorData.one_year_from_now
+                    ),
+                ),
+                (
+                    "status",
+                    models.CharField(
+                        choices=[
+                            ("Active", "Active"),
+                            ("Expired", "Expired"),
+                            ("Removed", "Removed"),
+                        ],
+                        default="Active",
+                        max_length=10,
+                    ),
+                ),
+                ("birthdate", models.DateField()),
+                ("place_of_birth", models.CharField(max_length=100)),
+                ("address", models.CharField(max_length=255)),
+                ("place_of_residence", models.CharField(max_length=100)),
+                ("postal_code", models.PositiveIntegerField()),
+                (
+                    "personal_number",
+                    models.CharField(
+                        blank=True,
+                        max_length=11,
+                        null=True,
+                        validators=[
+                            django.core.validators.RegexValidator(
+                                "^\\d+$", "Personal number must contain only digits."
+                            ),
+                            django.core.validators.MinLengthValidator(
+                                11, "Personal number must be exactly 11 digits."
+                            ),
+                            django.core.validators.MaxLengthValidator(
+                                11, "Personal number must be exactly 11 digits."
+                            ),
+                        ],
+                    ),
+                ),
+                ("email", models.EmailField(max_length=254, unique=True)),
+                (
+                    "phone_number",
+                    models.CharField(blank=True, max_length=15, null=True),
+                ),
+                ("add_to_whatsapp", models.BooleanField(default=True)),
+                ("print_card", models.BooleanField(default=False)),
+                ("note", models.TextField(blank=True, null=True)),
             ],
             options={
-                'verbose_name': 'Collector Data',
-                'verbose_name_plural': 'Collector Data',
-                'constraints': [models.UniqueConstraint(django.db.models.functions.text.Lower('first_name'), models.OrderBy(django.db.models.functions.text.Lower('last_name'), descending=True), name='first_last_name_unique')],
+                "verbose_name": "Collector Data",
+                "verbose_name_plural": "Collector Data",
+                "constraints": [
+                    models.UniqueConstraint(
+                        django.db.models.functions.text.Lower("first_name"),
+                        models.OrderBy(
+                            django.db.models.functions.text.Lower("last_name"),
+                            descending=True,
+                        ),
+                        name="first_last_name_unique",
+                    )
+                ],
             },
         ),
     ]

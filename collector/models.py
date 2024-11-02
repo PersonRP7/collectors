@@ -10,7 +10,6 @@ from django.core.validators import (
 
 
 class CollectorData(models.Model):
-
     class Meta:
         constraints = [
             UniqueConstraint(
