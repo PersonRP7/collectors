@@ -39,8 +39,6 @@ class CollectorData(models.Model):
     def __str__(self) -> str:
         return f"{self.first_name} {self.last_name} - {self.status}"
 
-    number = models.BigIntegerField(null=True, blank=True)
-
     first_name = models.CharField(max_length=32)
     last_name = models.CharField(max_length=32)
 
@@ -54,7 +52,7 @@ class CollectorData(models.Model):
         default=collector_status_choices.Active,
     )
 
-    birthdate = models.DateField()
+    birth_date = models.DateField()
     place_of_birth = models.CharField(max_length=64)
     address = models.CharField(max_length=64)
     place_of_residence = models.CharField(max_length=32)
@@ -72,7 +70,7 @@ class CollectorData(models.Model):
         ],
     )
 
-    email = models.EmailField(unique=True)
+    email = models.EmailField()
     phone_number = models.CharField(max_length=20, null=True, blank=True)
 
     whatsapp = models.BooleanField(default=True)
