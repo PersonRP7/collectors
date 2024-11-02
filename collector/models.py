@@ -44,8 +44,8 @@ class CollectorData(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
 
-    registration_date = models.DateField(default=date_today())
-    expiration_date = models.DateField(default=date_one_year_from_now())
+    registration_date = models.DateField(default=date_today)
+    expiration_date = models.DateField(default=date_one_year_from_now)
 
     collector_status_choices = get_status_choices()
     status = models.CharField(

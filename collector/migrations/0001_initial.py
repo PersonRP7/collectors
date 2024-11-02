@@ -34,7 +34,7 @@ class Migration(migrations.Migration):
                 (
                     "expiration_date",
                     models.DateField(
-                        default=collector.utils.date_utils.date_one_year_from_now()
+                        default=collector.utils.date_utils.date_one_year_from_now
                     ),
                 ),
                 (
