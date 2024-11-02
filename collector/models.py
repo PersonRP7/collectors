@@ -1,17 +1,14 @@
 """ Collector Data models """
 
+from typing import Any
 from django.db import models
 from django.db.models import UniqueConstraint
 from django.db.models.functions import Lower
-from django.core.validators import (
-    RegexValidator,
-    MinLengthValidator,
-    MaxLengthValidator,
-)
+from django.core.validators import RegexValidator
 from django.forms import ValidationError
+from collector.validators import EqualLengthValidator
 from collector.utils.date_utils import one_year_end_of_month, date_today
 from collector.utils.status_utils import get_status_choices
-from typing import Any, Dict
 
 
 class CollectorData(models.Model):
@@ -67,8 +64,7 @@ class CollectorData(models.Model):
         max_length=11,
         validators=[
             RegexValidator(r"^\d+$", "Personal number must contain only digits."),
-            MinLengthValidator(11, "Personal number must be exactly 11 digits."),
-            MaxLengthValidator(11, "Personal number must be exactly 11 digits."),
+            EqualLengthValidator(11, "Personal number must be exactly 11 digits."),
         ],
     )
 
@@ -86,7 +82,7 @@ class CollectorData(models.Model):
         super().clean()
         self.validate_collector_constraints()
 
-    def save(self, *args: Any, **kwargs: Dict[str, Any]) -> None:
+    def save(self, *args: Any, **kwargs: dict[str, Any]) -> None:
         self.full_clean()
         super().save(*args, **kwargs)
 
