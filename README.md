@@ -19,8 +19,10 @@ Here are a few steps on how to run this project locally:
     - Windows: ```$ .\env\Scripts\Activate.ps1```
 
 5. Install requirements:
-    - Linux: ```$ python3 -m pip install -r requirements.txt```
-    - Windows: ```$ python -m pip install -r requirements.txt```
+    - Core + dev requirements: ```$ python3 -m pip install .[dev]```
+    - Only core requirements: ```$ python3 -m pip install .```
+    ```dev``` requirements will install ```black``` and ```pre-commit```.
+    - ```pre-commit install```
 
 6. Create a local .env file:
     Use the ```.env_example``` as a template
