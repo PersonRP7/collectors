@@ -39,10 +39,10 @@ class CollectorData(models.Model):
 
     number = models.BigIntegerField(null=True, blank=True)
 
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
+    first_name = models.CharField(max_length=32)
+    last_name = models.CharField(max_length=32)
 
-    registration_date = models.DateField()
+    entry_date = models.DateField(default=date.today)
     expiration_date = models.DateField(default=one_year_from_now)
 
     STATUS_CHOICES = [
@@ -53,10 +53,10 @@ class CollectorData(models.Model):
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="Active")
 
     birthdate = models.DateField()
-    place_of_birth = models.CharField(max_length=100)
-    address = models.CharField(max_length=255)
-    place_of_residence = models.CharField(max_length=100)
-    postal_code = models.PositiveIntegerField()
+    place_of_birth = models.CharField(max_length=64)
+    address = models.CharField(max_length=64)
+    place_of_residence = models.CharField(max_length=32)
+    postal_code = models.CharField(max_length=10)
 
     # Personal number with validators
     personal_number = models.CharField(
@@ -71,9 +71,11 @@ class CollectorData(models.Model):
     )
 
     email = models.EmailField(unique=True)
-    phone_number = models.CharField(max_length=15, null=True, blank=True)
+    phone_number = models.CharField(max_length=20, null=True, blank=True)
 
-    add_to_whatsapp = models.BooleanField(default=True)
+    whatsapp = models.BooleanField(default=True)
     print_card = models.BooleanField(default=False)
 
-    note = models.TextField(blank=True, null=True)
+    reminder_count = models.PositiveIntegerField()
+
+    note = models.CharField(max_length=100, blank=True, null=True)
