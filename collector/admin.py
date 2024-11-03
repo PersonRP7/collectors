@@ -2,6 +2,7 @@ from django.contrib import admin
 from collector.models import CollectorData, ExpiringSoonCollectorData
 from django.contrib.auth.models import Group
 from collector.utils.date_utils import days_from_now
+from django.utils import timezone
 
 admin.site.unregister(Group)
 
@@ -11,7 +12,10 @@ class ExpiringSoonCollectorDataAdmin(admin.ModelAdmin):
 
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
-        return queryset.filter(expiration_date__lte=days_from_now(14))
+        today = timezone.now().date()
+        return queryset.filter(
+            expiration_date__lte=days_from_now(14), expiration_date__gte=today
+        )
 
     def has_add_permission(self, request):
         return False
