@@ -3,3 +3,13 @@ repos:
     rev: 23.9.1  # Use the latest version or pin a specific version
     hooks:
       - id: black
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.5.1  # Use the latest version or pin a specific version
+    hooks:
+      - id: mypy
+        args: [
+          "--ignore-missing-imports",
+          "--disallow-untyped-defs",
+          "--disallow-incomplete-defs",
+        ]
