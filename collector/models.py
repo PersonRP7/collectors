@@ -96,3 +96,7 @@ class CollectorData(models.Model):
                     ]
                 }
             )
+
+        # If birth date is the future date, display a custom message
+        if self.birth_date and self.birth_date > date_today():
+            raise ValidationError({"birth_date": ["Birth date must be a past date."]})
