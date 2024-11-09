@@ -1,5 +1,6 @@
 """ Collector Data models """
 
+from typing import override
 from django.db import models
 from django.db.models import UniqueConstraint
 from django.db.models.functions import Lower
@@ -8,6 +9,7 @@ from django.core.validators import (
     MinLengthValidator,
     MaxLengthValidator,
 )
+from django.forms import ValidationError
 from .utils.date_utils import date_one_year_from_now, date_today
 from .utils.status_utils import get_status_choices
 
@@ -79,3 +81,18 @@ class CollectorData(models.Model):
     reminder_count = models.PositiveIntegerField(default=0)
 
     note = models.CharField(max_length=100, blank=True, null=True)
+
+    @override
+    def clean(self):
+        super().clean()
+
+        # Implement a custom restriction that expiry date must be
+        # greater than the start date
+        if self.expiration_date < self.entry_date:
+            raise ValidationError(
+                {
+                    "expiration_date": [
+                        "Expiration date must be greater than registration date."
+                    ]
+                }
+            )
