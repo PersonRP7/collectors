@@ -1,6 +1,5 @@
 """ Collector Data models """
 
-from typing import override
 from django.db import models
 from django.db.models import UniqueConstraint
 from django.db.models.functions import Lower
@@ -82,10 +81,24 @@ class CollectorData(models.Model):
 
     note = models.CharField(max_length=100, blank=True, null=True)
 
-    @override
     def clean(self):
         super().clean()
+        self.validate_collector_constraints()
 
+    def save(self, *args, **kwargs):
+        self.validate_collector_constraints()
+
+        return super().save(*args, **kwargs)
+
+    def validate_collector_constraints(self) -> None:
+        """Validate collector constraints.
+
+        Whenever a model is created or updated, these custom validators are
+        invoked.
+
+        Raises:
+            ValidationError: When a constraint is validated.
+        """
         # Implement a custom restriction that expiry date must be
         # greater than the start date
         if self.expiration_date < self.entry_date:
