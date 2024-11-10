@@ -15,6 +15,7 @@ repos:
             "--disallow-untyped-defs",
             "--disallow-incomplete-defs",
           ]
+        exclude: "/migrations/.*\\.py"
 
   - repo: https://github.com/pre-commit/mirrors-prettier
     rev: v3.0.0 # Use the latest version or pin a specific version
