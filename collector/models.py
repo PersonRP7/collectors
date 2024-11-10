@@ -8,8 +8,10 @@ from django.core.validators import (
     MinLengthValidator,
     MaxLengthValidator,
 )
+from django.forms import ValidationError
 from .utils.date_utils import calculate_one_year_end_of_month, date_today
 from .utils.status_utils import get_status_choices
+from typing import Any
 
 
 class CollectorData(models.Model):
@@ -79,3 +81,47 @@ class CollectorData(models.Model):
     reminder_count = models.PositiveIntegerField(default=0)
 
     note = models.CharField(max_length=100, blank=True, null=True)
+
+    def clean(self) -> None:
+        super().clean()
+        self.validate_collector_constraints()
+
+    def save(self, *args: Any, **kwargs: Any) -> None:
+        self.validate_collector_constraints()
+        super().save(*args, **kwargs)
+
+    def validate_collector_constraints(self) -> None:
+        """Validate collector constraints.
+
+        Whenever a model is created or updated, these custom validators are
+        invoked.
+
+        Raises:
+            ValidationError: When a constraint is validated.
+        """
+        # Implement a custom restriction that expiry date must be
+        # greater than the start date
+        if self.expiration_date < self.entry_date:
+            raise ValidationError(
+                {
+                    "expiration_date": [
+                        "Expiration date must be greater than registration date."
+                    ]
+                }
+            )
+
+        # If birth date is the future date, display a custom message
+        if self.birth_date and self.birth_date > date_today():
+            raise ValidationError({"birth_date": ["Birth date must be a past date."]})
+
+
+class ExpiringSoonCollectorData(CollectorData):
+    """
+    Proxy model for displaying CollectorData entries
+    expiring soon.
+    """
+
+    class Meta:
+        proxy = True
+        verbose_name = "Expiring Soon Collector"
+        verbose_name_plural = "Expiring Soon Collectors"
