@@ -9,8 +9,8 @@ from django.core.validators import (
     MaxLengthValidator,
 )
 from django.forms import ValidationError
-from .utils.date_utils import date_one_year_from_now, date_today
-from .utils.status_utils import get_status_choices
+from collector.utils.date_utils import one_year_end_of_month, date_today
+from collector.utils.status_utils import get_status_choices
 from typing import Any, Dict
 
 
@@ -45,7 +45,7 @@ class CollectorData(models.Model):
     last_name = models.CharField(max_length=32)
 
     entry_date = models.DateField(default=date_today)
-    expiration_date = models.DateField(default=date_one_year_from_now)
+    expiration_date = models.DateField(default=one_year_end_of_month)
 
     collector_status_choices = get_status_choices()
     status = models.CharField(
