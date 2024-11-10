@@ -11,6 +11,7 @@ from django.core.validators import (
 from django.forms import ValidationError
 from .utils.date_utils import date_one_year_from_now, date_today
 from .utils.status_utils import get_status_choices
+from typing import Any
 
 
 class CollectorData(models.Model):
@@ -81,11 +82,11 @@ class CollectorData(models.Model):
 
     note = models.CharField(max_length=100, blank=True, null=True)
 
-    def clean(self):
+    def clean(self) -> None:
         super().clean()
         self.validate_collector_constraints()
 
-    def save(self, *args, **kwargs):
+    def save(self, *args: Any, **kwargs: Any) -> None:
         self.validate_collector_constraints()
         super().save(*args, **kwargs)
 
@@ -112,3 +113,15 @@ class CollectorData(models.Model):
         # If birth date is the future date, display a custom message
         if self.birth_date and self.birth_date > date_today():
             raise ValidationError({"birth_date": ["Birth date must be a past date."]})
+
+
+class ExpiringSoonCollectorData(CollectorData):
+    """
+    Proxy model for displaying CollectorData entries
+    expiring soon.
+    """
+
+    class Meta:
+        proxy = True
+        verbose_name = "Expiring Soon Collector"
+        verbose_name_plural = "Expiring Soon Collectors"

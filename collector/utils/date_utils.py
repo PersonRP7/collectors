@@ -1,6 +1,7 @@
 """ Utilities module for date manipulation """
 
 from datetime import date, timedelta
+from django.utils import timezone
 
 
 def date_one_year_from_now() -> date:
@@ -24,3 +25,16 @@ def date_today() -> date:
         date: A date object representing today's date.
     """
     return date.today()
+
+
+def days_from_now(days: int) -> date:
+    """
+    Calculate the date a certain number of days from today.
+
+    Args:
+        days (int): The number of days from the current date.
+
+    Returns:
+        date: The target date that is `days` from today.
+    """
+    return timezone.now().date() + timedelta(days=days)
