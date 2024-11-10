@@ -1,15 +1,23 @@
 repos:
   - repo: https://github.com/psf/black
-    rev: 23.9.1  # Use the latest version or pin a specific version
+    rev: 23.9.1 # Use the latest version or pin a specific version
     hooks:
       - id: black
+        args: ["--line-length", "88"] # Set line length to 88
 
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.5.1  # Use the latest version or pin a specific version
+    rev: v1.5.1 # Use the latest version or pin a specific version
     hooks:
       - id: mypy
-        args: [
-          "--ignore-missing-imports",
-          "--disallow-untyped-defs",
-          "--disallow-incomplete-defs",
-        ]
+        args:
+          [
+            "--ignore-missing-imports",
+            "--disallow-untyped-defs",
+            "--disallow-incomplete-defs",
+          ]
+
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v3.0.0 # Use the latest version or pin a specific version
+    hooks:
+      - id: prettier
+        args: ["--print-width", "88"] # Set line length to 88 for Prettier
