@@ -79,3 +79,15 @@ class CollectorData(models.Model):
     reminder_count = models.PositiveIntegerField(default=0)
 
     note = models.CharField(max_length=100, blank=True, null=True)
+
+
+class ExpiringSoonCollectorData(CollectorData):
+    """
+    Proxy model for displaying CollectorData entries
+    expiring soon.
+    """
+
+    class Meta:
+        proxy = True
+        verbose_name = "Expiring Soon Collector"
+        verbose_name_plural = "Expiring Soon Collectors"
