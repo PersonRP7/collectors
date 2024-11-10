@@ -11,7 +11,7 @@ from django.core.validators import (
 from django.forms import ValidationError
 from .utils.date_utils import calculate_one_year_end_of_month, date_today
 from .utils.status_utils import get_status_choices
-from typing import Any
+from typing import Any, Dict
 
 
 class CollectorData(models.Model):
@@ -86,8 +86,8 @@ class CollectorData(models.Model):
         super().clean()
         self.validate_collector_constraints()
 
-    def save(self, *args: Any, **kwargs: Any) -> None:
-        self.validate_collector_constraints()
+    def save(self, *args: Any, **kwargs: Dict[str, Any]) -> None:
+        self.full_clean()
         super().save(*args, **kwargs)
 
     def validate_collector_constraints(self) -> None:
