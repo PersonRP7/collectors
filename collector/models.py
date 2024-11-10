@@ -87,8 +87,7 @@ class CollectorData(models.Model):
 
     def save(self, *args, **kwargs):
         self.validate_collector_constraints()
-
-        return super().save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def validate_collector_constraints(self) -> None:
         """Validate collector constraints.
