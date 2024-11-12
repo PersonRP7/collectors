@@ -1,11 +1,13 @@
+"""Collector Admin model definition"""
+
+from typing import Optional
 from django.contrib import admin
 from django.contrib.auth.models import Group
+from django.db.models import QuerySet
 from django.http import HttpRequest
 from django.utils import timezone
 from collector.models import CollectorData, ExpiringSoonCollectorData
 from collector.utils.date_utils import days_from_now
-from typing import Optional, Type
-from django.db.models import QuerySet
 
 admin.site.unregister(Group)
 
@@ -17,7 +19,15 @@ class ExpiringSoonCollectorDataAdmin(admin.ModelAdmin):
     whose subscription is expiring soon (within a specified timeframe).
     """
 
-    list_display = ("first_name", "last_name", "expiration_date", "status")
+    readonly_fields = ("created_at", "last_modified")
+    list_display = (
+        "created_at",
+        "last_modified",
+        "first_name",
+        "last_name",
+        "expiration_date",
+        "status",
+    )
 
     def get_queryset(self, request: HttpRequest) -> QuerySet["CollectorData"]:
         """Get the queryset for collectors expiring within 14 days but not yet expired.
