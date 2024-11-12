@@ -1,11 +1,13 @@
+"""Collector Admin model"""
+
+from typing import Optional
 from django.contrib import admin
 from django.contrib.auth.models import Group
+from django.db.models import QuerySet
 from django.http import HttpRequest
 from django.utils import timezone
 from collector.models import CollectorData, ExpiringSoonCollectorData
 from collector.utils.date_utils import days_from_now
-from typing import Optional, Type
-from django.db.models import QuerySet
 
 admin.site.unregister(Group)
 

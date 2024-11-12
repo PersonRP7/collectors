@@ -35,6 +35,13 @@ class CollectorData(models.Model):
         verbose_name_plural = verbose_name
         db_table_comment = verbose_name
 
+    class Media:
+        """
+        A metaclass used for JS loading.
+        """
+
+        js = ("confirm_empty_field.js",)  # Path to your JavaScript file
+
     def __str__(self) -> str:
         return f"{self.first_name} {self.last_name} - {self.status}"
 
@@ -118,6 +125,10 @@ class ExpiringSoonCollectorData(CollectorData):
     """
 
     class Meta:
+        """
+        Various restrictions and constants that override default table
+        settings.
+        """
         proxy = True
         verbose_name = "Expiring Soon Collector"
         verbose_name_plural = "Expiring Soon Collectors"
