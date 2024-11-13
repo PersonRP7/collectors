@@ -38,6 +38,9 @@ class CollectorData(models.Model):
     def __str__(self) -> str:
         return f"{self.first_name} {self.last_name} - {self.status}"
 
+    created_at = models.DateTimeField(auto_now_add=True)
+    last_modified = models.DateTimeField(auto_now=True)
+
     first_name = models.CharField(max_length=32)
     last_name = models.CharField(max_length=32)
 
@@ -59,6 +62,7 @@ class CollectorData(models.Model):
 
     # Personal number with validators
     personal_number = models.CharField(
+        unique=True,
         blank=True,
         null=True,
         max_length=11,

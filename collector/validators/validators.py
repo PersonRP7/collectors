@@ -37,9 +37,12 @@ class EqualLengthValidator(BaseValidator):
         """
         return a != b
 
-    def clean(self, x) -> int:
+    def clean(self, x: str) -> int:
         """Clean the input field by returning the length of the written
         characters.
+
+        Arguments:
+            x(str): Input field content.
 
         Returns:
             int: Length of the field to clean.
