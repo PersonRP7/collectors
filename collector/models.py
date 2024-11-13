@@ -62,6 +62,7 @@ class CollectorData(models.Model):
 
     # Personal number with validators
     personal_number = models.CharField(
+        unique=True,
         blank=True,
         null=True,
         max_length=11,
