@@ -6,12 +6,17 @@ from django.contrib.auth.models import Group
 from django.db.models import QuerySet
 from django.http import HttpRequest
 from django.utils import timezone
-from collector.models import CollectorData, ExpiringSoonCollectorData
+from collector.models import (
+    CollectorData,
+    ExpiringSoonCollectorData,
+    ExpiredCollectorData,
+)
 from collector.utils.date_utils import days_from_now
 
 admin.site.unregister(Group)
 
 
+@admin.register(ExpiringSoonCollectorData)
 class ExpiringSoonCollectorDataAdmin(admin.ModelAdmin):
     """Admin class for managing the display of `ExpiringSoonCollectorData` model.
 
@@ -67,5 +72,46 @@ class ExpiringSoonCollectorDataAdmin(admin.ModelAdmin):
         return True
 
 
+@admin.register(ExpiredCollectorData)
+class ExpiredCollectorDataAdmin(admin.ModelAdmin):
+    """Get expired collectors.
+
+    Read-only ModelAdmin for the ExpiredCollectorData proxy model.
+    """
+
+    list_display = ("first_name", "last_name", "expiration_date", "status")
+    list_filter = ("status",)
+    search_fields = ("first_name", "last_name", "email")
+
+    # Disable all actions that could modify data
+    actions = None
+
+    # Make fields read-only
+    readonly_fields = [field.name for field in ExpiredCollectorData._meta.fields]
+
+    # Prevent adding, editing, or deleting
+
+    def has_add_permission(self, request: HttpRequest) -> bool:
+        """Disable the add permission for this admin view."""
+        return False
+
+    def has_change_permission(
+        self, request: HttpRequest, obj: Optional[CollectorData] = None
+    ) -> bool:
+        """Disable the change permission for this admin view."""
+        return False
+
+    def has_delete_permission(
+        self, request: HttpRequest, obj: Optional[CollectorData] = None
+    ) -> bool:
+        """Disable the delete permission for this admin view."""
+        return False
+
+    def has_view_permission(
+        self, request: HttpRequest, obj: Optional[CollectorData] = None
+    ) -> bool:
+        """Enable the view permission for this admin view."""
+        return True
+
+
 admin.site.register(CollectorData)
-admin.site.register(ExpiringSoonCollectorData, ExpiringSoonCollectorDataAdmin)

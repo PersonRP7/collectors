@@ -9,6 +9,8 @@ from django.forms import ValidationError
 from collector.validators import EqualLengthValidator
 from collector.utils.date_utils import one_year_end_of_month, date_today
 from collector.utils.status_utils import get_status_choices
+from django.utils.timezone import now
+from django.db.models import QuerySet
 
 
 class CollectorData(models.Model):
@@ -31,7 +33,7 @@ class CollectorData(models.Model):
             ),
         ]
 
-        verbose_name = "Collector Data"
+        verbose_name = "All Collectors"
         verbose_name_plural = verbose_name
         db_table_comment = verbose_name
 
@@ -123,5 +125,27 @@ class ExpiringSoonCollectorData(CollectorData):
 
     class Meta:
         proxy = True
-        verbose_name = "Expiring Soon Collector"
-        verbose_name_plural = "Expiring Soon Collectors"
+        verbose_name = "Collectors expiring soon"
+        verbose_name_plural = "Collectors expiring soon"
+
+
+class ExpiredCollectorDataManager(models.Manager):
+    """
+    Custom manager for the ExpiredCollectorData proxy model to filter expired users.
+    """
+
+    def get_queryset(self) -> QuerySet["CollectorData"]:
+        return super().get_queryset().filter(expiration_date__lt=now().date())
+
+
+class ExpiredCollectorData(CollectorData):
+    """
+    Proxy model for CollectorData to display users whose expiration_date has passed.
+    """
+
+    objects = ExpiredCollectorDataManager()
+
+    class Meta:
+        proxy = True
+        verbose_name = "Expired collectors"
+        verbose_name_plural = "Expired collectors"
