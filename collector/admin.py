@@ -10,6 +10,7 @@ from collector.models import CollectorData, ExpiringSoonCollectorData
 from collector.utils.date_utils import days_from_now
 from django.http import HttpResponse
 from datetime import datetime
+from rangefilter.filters import DateRangeFilterBuilder
 import csv
 
 admin.site.unregister(Group)
@@ -72,6 +73,7 @@ class ExpiringSoonCollectorDataAdmin(admin.ModelAdmin):
 
 class CollectorDataAdmin(admin.ModelAdmin):
     search_fields = ["first_name", "last_name"]
+    list_filter = (("expiration_date", DateRangeFilterBuilder()),)
 
     def export_as_csv(
         self, request: HttpRequest, queryset: QuerySet["CollectorData"]

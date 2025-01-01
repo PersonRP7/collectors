@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "collector.apps.CollectorConfig",
     "user.apps.UserConfig",
+    "rangefilter",
 ]
 
 MIDDLEWARE = [
