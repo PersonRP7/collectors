@@ -67,5 +67,11 @@ class ExpiringSoonCollectorDataAdmin(admin.ModelAdmin):
         return True
 
 
-admin.site.register(CollectorData)
+@admin.register(CollectorData)
+class CollectorDataAdmin(admin.ModelAdmin):
+    """Custom admin for CollectorData."""
+
+    search_fields = ["first_name", "last_name"]
+
+
 admin.site.register(ExpiringSoonCollectorData, ExpiringSoonCollectorDataAdmin)
