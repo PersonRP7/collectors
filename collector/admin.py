@@ -8,6 +8,9 @@ from django.http import HttpRequest
 from django.utils import timezone
 from collector.models import CollectorData, ExpiringSoonCollectorData
 from collector.utils.date_utils import days_from_now
+from django.http import HttpResponse
+from datetime import datetime
+import csv
 
 admin.site.unregister(Group)
 
@@ -67,11 +70,74 @@ class ExpiringSoonCollectorDataAdmin(admin.ModelAdmin):
         return True
 
 
-@admin.register(CollectorData)
 class CollectorDataAdmin(admin.ModelAdmin):
-    """Custom admin for CollectorData."""
-
     search_fields = ["first_name", "last_name"]
 
+    def export_as_csv(
+        self, request: HttpRequest, queryset: QuerySet["CollectorData"]
+    ) -> HttpResponse:
+        """
+        Export selected CollectorData objects as a CSV file.
 
+        Args:
+            request: The HTTP request object.
+            queryset: The queryset of selected CollectorData instances.
+
+        Returns:
+            HttpResponse: A response containing the CSV data.
+        """
+        current_timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        filename = f"collector_data_{current_timestamp}.csv"
+        response = HttpResponse(content_type="text/csv")
+        response["Content-Disposition"] = f"attachment; filename={filename}"
+
+        writer = csv.writer(response)
+
+        writer.writerow(
+            [
+                "First Name",
+                "Last Name",
+                "Status",
+                "Email",
+                "Phone Number",
+                "Birth Date",
+                "Place of Birth",
+                "Place of Residence",
+                "Postal Code",
+                "Personal Number",
+                "Entry Date",
+                "Expiration Date",
+                "Reminder Count",
+                "Note",
+                "Created At",
+            ]
+        )
+
+        for obj in queryset:
+            writer.writerow(
+                [
+                    obj.first_name,
+                    obj.last_name,
+                    obj.status,
+                    obj.email,
+                    obj.phone_number,
+                    obj.birth_date,
+                    obj.place_of_birth,
+                    obj.place_of_residence,
+                    obj.postal_code,
+                    obj.personal_number,
+                    obj.entry_date,
+                    obj.expiration_date,
+                    obj.reminder_count,
+                    obj.note,
+                    obj.created_at,
+                ]
+            )
+
+        return response
+
+    actions = ["export_as_csv"]
+
+
+admin.site.register(CollectorData, CollectorDataAdmin)
 admin.site.register(ExpiringSoonCollectorData, ExpiringSoonCollectorDataAdmin)
